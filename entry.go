@@ -16,6 +16,8 @@ type commitList struct {
 	msg string
 }
 
+
+
 func getGitCommits() *tview.List{
 	list := tview.NewList()	
 	// git log --pretty=format:"%h - %an, %ad : %s" --date=short
@@ -36,8 +38,8 @@ func getGitCommits() *tview.List{
 			author: splitedCommit[2],
 			msg:splitedCommitMsg[1],
 		} 
+		list.AddItem(c.commitHash,c.date,'a',nil)
 	}
-
 	fmt.Println(string(commits))
 	
 	return list
@@ -46,12 +48,9 @@ func getGitCommits() *tview.List{
 func main() {  
 	app := tview.NewApplication()
 	list := getGitCommits()
-	fmt.Println(list)
 	grid := tview.NewGrid()
-	
-	app.SetRoot(grid,false)
-
-
-
-
+	grid.SetColumns()
+	grid.SetRows()
+	grid.AddItem(list,0,0,3,3,0,0,false)
+	app.SetRoot(grid,false).Run()
 }
