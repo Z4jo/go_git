@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os/exec"
 	"strings"
+
+	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
 )
 
@@ -45,10 +47,18 @@ func getGitCommits() *tview.List{
 	return list
 }
 
+
 func main() {  
 	app := tview.NewApplication()
 	list := getGitCommits()
 	grid := tview.NewGrid()
+	capture := func(event *tcell.EventKey) *tcell.EventKey {
+		if event.Rune() == 'l'{
+			app.SetFocus(grid.)				
+		}
+		return event
+	}
+	grid.SetInputCapture(capture)
 	grid.SetColumns()
 	grid.SetRows()
 	grid.AddItem(list,0,0,3,3,0,0,false)
