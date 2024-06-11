@@ -11,14 +11,27 @@ import (
 )
 
 
+/*
+	git status --short --ignored
+	git branch --all
+
+	git rev-list --left-right --count branch1...branch2
+
+	git add 
+	git commit 
+	git pull
+	git commit --amend
+	git commit --amend --no-edit
+	
+	git push 
+
+*/
 type commitList struct {
 	date string
 	commitHash string
 	author string
 	msg string
 }
-
-
 
 func getGitCommits() *tview.List{
 	list := tview.NewList()	
@@ -47,6 +60,9 @@ func getGitCommits() *tview.List{
 	return list
 }
 
+func moveBetweenElements(){
+	
+}
 
 func main() {  
 	app := tview.NewApplication()
@@ -54,7 +70,7 @@ func main() {
 	grid := tview.NewGrid()
 	capture := func(event *tcell.EventKey) *tcell.EventKey {
 		if event.Rune() == 'l'{
-			app.SetFocus(grid.)				
+			app.SetFocus(grid)				
 		}
 		return event
 	}
