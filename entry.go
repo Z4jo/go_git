@@ -3,60 +3,47 @@ package main
 import (
 	//"github.com/gdamore/tcell/v2"
 	//"github.com/gdamore/tcell/v2"
+//	"fmt"
+
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
 )
-
-
-
 func main() {
-
 	app := tview.NewApplication()
 	commits := Commits()
 	branches := AllBranches()
-	newPrimitive := func(text string) tview.Primitive {
-		return tview.NewTextView().
-			SetTextAlign(tview.AlignCenter).
-			SetText(text)
-	}
-	main := newPrimitive("Main content")
-
-	header := newPrimitive("header")	
-	footer := newPrimitive("footer")	
-	
+	mainArea := tview.NewButton("mainUwuwa")
+	currentBranch := CurrentBranch()
+	statusCurrentBranch := StatusCurrentBranch(currentBranch)
+	//titleColor:= tcell.ColorNames["black"]
+		
 	grid := tview.NewGrid().
-		SetRows(3, 0, 3).
+		SetRows(7, 0, 7).
 		SetColumns(30, 0, 30).
-		SetBorders(true).
-		AddItem(header, 0, 0, 1, 3, 0, 0, false).
-		AddItem(footer, 2, 0, 1, 3, 0, 0, false)
-
-	// Layout for screens narrower than 100 cells (menu and side bar are hidden).
-	grid.AddItem(commits, 0, 0, 0, 0, 0, 0, false).
-		AddItem(main, 1, 0, 1, 3, 0, 0, false).
-		AddItem(branches, 0, 0, 0, 0, 0, 0, false)
-
+		SetBorders(true)
+	
 	// Layout for screens wider than 100 cells.
-	grid.AddItem(commits, 1, 0, 1, 1, 0, 100, false).
-		AddItem(main, 1, 1, 1, 1, 0, 100, false).
-		AddItem(branches, 1, 2, 1, 1, 0, 100, false)
+	grid.AddItem(commits, 0, 0, 2, 1, 0, 100, true).
+		AddItem(branches, 2, 0, 2, 1, 0, 100, false).
+		AddItem(mainArea, 0, 1, 2, 2, 0, 100, false)
 
-	
-	firstRow := []tview.Primitive{commits,header,branches}
-	secondRow := []tview.Primitive{commits,main,branches}
-	thirdRow := []tview.Primitive{commits,footer,branches}
-	rows := Rotator{firstRow,0}	
-	rows := Rotator{secondRow,0}	
-	rows := Rotator{thirdRow,0}	
-	
+	//Layout abstraction initialization	
+	firstRow := Rotator{[]tview.Primitive{commits,mainArea}}
+	secondRow := Rotator{[]tview.Primitive{branches,mainArea}}
+	//thirdRow := Rotator{[]tview.Primitive{commits,footer,branches}}
+	appLayout := AppLayout{[]Rotator{firstRow,secondRow},0,0}	
 
 	capture := func(event *tcell.EventKey)*tcell.EventKey{
 		if event.Rune() == 'l'{
-			app.SetFocus(commits)	
+			app.SetFocus(*appLayout.nextNodeHorizontal(true))
+		}else if event.Rune() == 'h'{	
+			app.SetFocus(*appLayout.nextNodeHorizontal(false))
 		}else if event.Rune() == 'j'{
-			app.SetFocus(branches)
-		}
-
+			app.SetFocus(*appLayout.nextNodeVertical(true))	
+		}else if event.Rune() == 'k'{
+			app.SetFocus(*appLayout.nextNodeVertical(false))	
+		}		
+		
 		
 		return event
 	}

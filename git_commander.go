@@ -2,10 +2,8 @@ package main
 
 import(
 	"github.com/rivo/tview"
-	"fmt"
 	"os/exec"
 	"strings"
-
 )
 
 type commitList struct {
@@ -25,7 +23,6 @@ func AllBranches() *tview.List{
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(string(branches))
 	for _,branch := range strings.Split(string(branches),"\n"){
 		list.AddItem(branch," ", ' ', nil)
 	}
@@ -55,7 +52,20 @@ func Commits() *tview.List{
 		} 
 		list.AddItem(c.commitHash,c.date,' ',nil)
 	}
-	fmt.Println(string(commits))
-	
 	return list
+}
+
+func CurrentBranch() string{
+	cmd:= exec.Command("git", "rev-parse", "--abbrev-ref", "HEAD")
+	cmd.Dir = "./"
+	currentBranch,err := cmd.Output()
+	if err != nil {
+		panic(err)
+	}
+	return string(currentBranch)
+}
+
+func StatusCurrentBranch(currentBranch string){
+
+
 }
