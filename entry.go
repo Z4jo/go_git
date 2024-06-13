@@ -44,7 +44,6 @@ func main() {
 			app.SetFocus(*appLayout.nextNodeVertical(false))	
 		}		
 		
-		
 		return event
 	}
 	grid.SetInputCapture(capture)	
