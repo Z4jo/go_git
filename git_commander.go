@@ -6,13 +6,16 @@ import(
 	"strings"
 )
 
-type commitList struct {
+type CommitList struct {
 	date string
 	commitHash string
 	author string
 	msg string
 }
-
+type Status struct{
+	marking string
+	fileName string
+}
 
 
 func AllBranches() *tview.List{
@@ -44,7 +47,7 @@ func Commits() *tview.List{
 		splitedCommitMsg := strings.Split(commit, ":")
 
 		splitedCommit := strings.Split(splitedCommitMsg[0], " ")
-		c := commitList{
+		c := CommitList{
 			date :splitedCommit[2],
 			commitHash: splitedCommit[0],
 			author: splitedCommit[2],
@@ -65,7 +68,13 @@ func CurrentBranch() string{
 	return string(currentBranch)
 }
 
-func StatusCurrentBranch(currentBranch string){
-
-
+func StatusCurrentBranch(currentBranch string)Status{
+	cmd:= exec.Command("git","status","-s")
+	output,err := cmd.Output()
+	if err != nil{
+		panic(err)
+	}
+	statusArr := strings.Split(string(output), " ")
+	status := Status{statusArr[0],statusArr[1]}
+	return status
 }

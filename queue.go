@@ -42,6 +42,7 @@ func(a *AppLayout) nextNodeVertical(direction bool) *tview.Primitive{
 	return primitiveRet
 }
 
+
 func (a *AppLayout) nextNodeHorizontal(direction bool) *tview.Primitive{
 	rowArr := a.arr[a.lastIndexRow].arr
 	var primitiveRet *tview.Primitive
@@ -64,5 +65,3 @@ func (a *AppLayout) nextNodeHorizontal(direction bool) *tview.Primitive{
 	}
 	return primitiveRet
 }
-
-
