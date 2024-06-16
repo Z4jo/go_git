@@ -26,10 +26,10 @@ func main() {
 		SetColumns(30, 0, 30).
 		SetBorders(true)
 
-	grid.AddItem(fileStatusList, 0, 0, 4, 1, 0, 100, true).
-		AddItem(actionButtons,4,0,1,1,0,100,false).
-		AddItem(branchStatusTextView,5,0,1,1,0,100,false).
-		AddItem(branchStatusList, 6, 0, 4, 1, 0, 100, false).
+	grid.AddItem(fileStatusList, 0, 0, 2, 1, 0, 100, true).
+		AddItem(actionButtons,2,0,1,1,0,100,false).
+		AddItem(branchStatusTextView,3,0,1,1,0,100,false).
+		AddItem(branchStatusList, 4, 0, 4, 1, 0, 100, false).
 		AddItem(mainArea, 0, 1, 10, 5, 0, 100, false)
 
 	firstRow := Rotator{[]tview.Primitive{fileStatusList,mainArea}}
