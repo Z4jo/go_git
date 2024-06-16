@@ -27,8 +27,10 @@ type BranchStatus struct{
 
 func AllBranches() string{
 	cmd := exec.Command("git","branch","--all")
-	branches,err := cmd.Output()
+	branches,err := cmd.CombinedOutput()
 	if err != nil {
+		log.Println("1")
+		log.Println(branches)
 		log.Fatalln(err)
 	}
 	return strings.TrimSpace(string(branches))
@@ -36,10 +38,11 @@ func AllBranches() string{
 
 func Commits() *tview.List{
 	list := tview.NewList()	
-	// git log --pretty=format:"%h - %an, %ad : %s" --date=short
 	cmd := exec.Command("git", "log", "--pretty=format:\"%h - %an, %ad : %s\"" ,"--date=short")
-	commits,err := cmd.Output()
+	commits,err := cmd.CombinedOutput()
 	if err != nil{
+		log.Println("2")
+		log.Println(commits)
 		log.Fatalln(err)
 	}
 
@@ -60,17 +63,21 @@ func Commits() *tview.List{
 
 func CurrentBranch() string{
 	cmd:= exec.Command("git", "rev-parse", "--abbrev-ref", "HEAD")
-	currentBranch,err := cmd.Output()
+	currentBranch,err := cmd.CombinedOutput()
 	if err != nil {
+		log.Println("3")
+		log.Println(currentBranch)
 		log.Fatalln(err)
 	}
 	return string(currentBranch)
 }
 
+//TODO: 
 func UpStreamBranch() string{
 	cmd:=exec.Command("git", "rev-parse","--abbrev-ref", "--symbolic-full-name","@{u}")
-	upStreamBranch,err := cmd.Output()
+	upStreamBranch,err := cmd.CombinedOutput()
 	if err != nil{
+		log.Println(string(upStreamBranch))
 		log.Fatalln(err)
 	}
 	ret := string(upStreamBranch)
@@ -79,8 +86,10 @@ func UpStreamBranch() string{
 
 func CurrentBranchFileStatus(currentBranch string)[]FileStatus{
 	cmd := exec.Command("git","status","-s")
-	output,err := cmd.Output()
+	output,err := cmd.CombinedOutput()
 	if err != nil{
+		log.Println("5")
+		log.Println(output)
 		log.Fatalln(err)
 	}
 	status := string(output)
@@ -113,12 +122,14 @@ func StatusCurrentBranch(currentBranch string,upStreamBranch string)BranchStatus
 	cmdAhead.Dir = "./"
 	commitsAhead,err := cmdAhead.CombinedOutput()
 	if err != nil{
+		log.Println("6")
 		log.Println(string(commitsAhead))
 		log.Fatalln(err)
 	}
 	cmdBehind := exec.Command("git","rev-list","--count",commitsBehindString)	
 	commitsBehind,err := cmdBehind.Output()
 	if err != nil{
+		log.Println("7")
 		log.Println(string(commitsBehind))
 		log.Fatalln(err)
 	}
