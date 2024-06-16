@@ -1,33 +1,45 @@
 package main
 
 import (
-	//"github.com/gdamore/tcell/v2"
-	//"github.com/gdamore/tcell/v2"
-	//"fmt"
+	"log"
+
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
 )
 
+
+
 func main() {
+	selectedFiles := make([]string,1)
+	localBranch := CurrentBranch()
+	upStreamBranch := UpStreamBranch()
+	filesStatus := CurrentBranchFileStatus(localBranch)
+	branchStatus := StatusCurrentBranch(localBranch, upStreamBranch)
 	app := tview.NewApplication()
-	commits := Commits()
+	//commits := Commits()
 	branches := AllBranches()
-	mainArea := tview.NewButton("mainUwuwa")
-	currentBranch := CurrentBranch()
-	statusCurrentBranch := StatusCurrentBranch(currentBranch)
-		
+	mainArea := tview.NewButton("mainXd")
+	branchStatusList := BranchList(branches)
+	branchStatusTextView := BranchStatusTextView(branchStatus,upStreamBranch,localBranch)
+	fileStatusList := FilesStatusList(filesStatus, &selectedFiles)
+	actionButtons := ActionButtons(app)
+
 	grid := tview.NewGrid().
-		SetRows(7, 0, 7).
+		SetRows(10, 0, 7).
 		SetColumns(30, 0, 30).
 		SetBorders(true)
 	
-	grid.AddItem(commits, 0, 0, 2, 1, 0, 100, true).
-		AddItem(branches, 2, 0, 2, 1, 0, 100, false).
-		AddItem(mainArea, 0, 1, 2, 2, 0, 100, false)
 
-	firstRow := Rotator{[]tview.Primitive{commits,mainArea}}
-	secondRow := Rotator{[]tview.Primitive{branches,mainArea}}
-	appLayout := AppLayout{[]Rotator{firstRow,secondRow},0,0}	
+	grid.AddItem(fileStatusList, 0, 0, 4, 1, 0, 100, true).
+		AddItem(actionButtons,4,0,1,1,0,100,false).
+		AddItem(branchStatusTextView,5,0,1,1,0,100,false).
+		AddItem(branchStatusList, 6, 0, 4, 1, 0, 100, false).
+		AddItem(mainArea, 0, 1, 10, 5, 0, 100, false)
+
+	firstRow := Rotator{[]tview.Primitive{fileStatusList,mainArea}}
+	secondRow := Rotator{[]tview.Primitive{actionButtons,mainArea}}
+	thirdRow := Rotator{[]tview.Primitive{branchStatusList,mainArea}}
+	appLayout := AppLayout{[]Rotator{firstRow,secondRow,thirdRow},0,0}	
 
 	capture := func(event *tcell.EventKey)*tcell.EventKey{
 		if event.Rune() == 'l'{
@@ -46,5 +58,6 @@ func main() {
 	if err := app.SetRoot(grid, true).Run(); err != nil {
 		panic(err)
 	}
+	log.Println(selectedFiles)
 
 }
