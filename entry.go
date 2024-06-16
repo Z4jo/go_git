@@ -2,12 +2,9 @@ package main
 
 import (
 	"log"
-
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
 )
-
-
 
 func main() {
 	selectedFiles := make([]string,1)
@@ -28,7 +25,6 @@ func main() {
 		SetRows(10, 0, 7).
 		SetColumns(30, 0, 30).
 		SetBorders(true)
-	
 
 	grid.AddItem(fileStatusList, 0, 0, 4, 1, 0, 100, true).
 		AddItem(actionButtons,4,0,1,1,0,100,false).
@@ -53,11 +49,9 @@ func main() {
 		}		
 		return event
 	}
-
 	grid.SetInputCapture(capture)	
 	if err := app.SetRoot(grid, true).Run(); err != nil {
 		panic(err)
 	}
 	log.Println(selectedFiles)
-
 }
