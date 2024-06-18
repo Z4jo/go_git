@@ -55,10 +55,11 @@ func FilesStatusList(filesStatus []FileStatus, selectedFiles *[]string)*tview.Li
 }
 
 func ActionButtons(app *tview.Application) *tview.Flex {
-	mergeButton := tview.NewButton("MERGE")
-	addButton := tview.NewButton("ADD")
-	commitButton := tview.NewButton("COMMIT")
-	flex := tview.NewFlex().AddItem(mergeButton,0,1,true).
+	flex := tview.NewFlex()
+	mergeButton := tview.NewButton("MERGE").SetSelectedFunc(func() {log.Println("merge pressed")})
+	addButton := tview.NewButton("ADD").SetSelectedFunc(func() {log.Println("add pressed")})
+	commitButton := tview.NewButton("COMMIT").SetSelectedFunc(func() {log.Println("commit pressed")})
+	flex.AddItem(mergeButton,0,1,false).
 					AddItem(addButton,0,1,false).
 					AddItem(commitButton,0,1,false)
 	
@@ -67,27 +68,36 @@ func ActionButtons(app *tview.Application) *tview.Flex {
 
 	capture := func  (event *tcell.EventKey) *tcell.EventKey{
 		if event.Rune() == 'j'{
-			return event}
+			return event
+		}
 		if event.Rune() == 'k'{
-			return event}
+			return event
+		}
 		if event.Rune() == 'h'{
+			log.Println("flex h pressed last_index:",lastIndex)
 			if lastIndex - 1 < 0{
 				return event
 			}else{
 				app.SetFocus(buttons[lastIndex-1])	
-				lastIndex-=1
-			}}
+				log.Println("minusing 1")
+				lastIndex -= 1
+			}
+		}
 		if event.Rune() == 'l'{
+			log.Println("flex l pressed last_index:",lastIndex)
 			if lastIndex + 1 > len(buttons)-1{
 				return event
 			}else{
 				app.SetFocus(buttons[lastIndex+1])	
-				lastIndex+=1
+				log.Println("adding 1")
+				lastIndex += 1
 			}
 		}
-		
 		return event	
 	}
+	mergeButton.SetInputCapture(capture)
+	addButton.SetInputCapture(capture)
+	commitButton.SetInputCapture(capture)
 	flex.SetInputCapture(capture)
 	return flex 
 }
